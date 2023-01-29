@@ -137,7 +137,7 @@ lvim.plugins = {
   {
     'f-person/git-blame.nvim',
     event = "BufRead"
-  },
+  }
 }
 
 -- 创建自定义命令
