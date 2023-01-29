@@ -8,16 +8,49 @@ vim.cmd [[
                 set shellquote= shellxquote=
   ]]
 
+-- 定义别名
+local xl = lvim.builtin
+local keymap = lvim.builtin.which_key.mappings
+local zmy = lvim.keys.normal_mode
+local zh = lvim.keys.visual_mode
+
+
 -- 向 whichKey 插件上添加新的快捷键
-lvim.builtin.which_key.mappings["S"] = { -- 查询替换
-  name = "Search And Replace",
-  w = { "<cmd>lua require('spectre').open_visual({select_word=true})<CR>", "Word" },
-  c = { "viw:lua require('spectre').open_file_search()<cr>", "Word" },
-}
-lvim.builtin.which_key.mappings["y"] = { -- 复制当前文件完整路径
-  name = "Copy File Path",
-  y = { ":Cppath<CR>", "Copy Current File Path" }
-}
+-- 查询和替换快捷键
+keymap["r"] = { name = "SearchReplaceSingleBuffer" }
+
+keymap["r"]["s"] =
+  { "<CMD>SearchReplaceSingleBufferSelections<CR>", "SearchReplaceSingleBuffer [s]elction list" }
+keymap["r"]["o"] = { "<CMD>SearchReplaceSingleBufferOpen<CR>", "[o]pen" }
+keymap["r"]["w"] = { "<CMD>SearchReplaceSingleBufferCWord<CR>", "[w]ord" }
+keymap["r"]["W"] = { "<CMD>SearchReplaceSingleBufferCWORD<CR>", "[W]ORD" }
+keymap["r"]["e"] = { "<CMD>SearchReplaceSingleBufferCExpr<CR>", "[e]xpr" }
+keymap["r"]["f"] = { "<CMD>SearchReplaceSingleBufferCFile<CR>", "[f]ile" }
+
+keymap["r"]["b"] = { name = "SearchReplaceMultiBuffer" }
+
+keymap["r"]["b"]["s"] =
+  { "<CMD>SearchReplaceMultiBufferSelections<CR>","SearchReplaceMultiBuffer [s]elction list" }
+keymap["r"]["b"]["o"] = { "<CMD>SearchReplaceMultiBufferOpen<CR>", "[o]pen" }
+keymap["r"]["b"]["w"] = { "<CMD>SearchReplaceMultiBufferCWord<CR>", "[w]ord" }
+keymap["r"]["b"]["W"] = { "<CMD>SearchReplaceMultiBufferCWORD<CR>", "[W]ORD" }
+keymap["r"]["b"]["e"] = { "<CMD>SearchReplaceMultiBufferCExpr<CR>", "[e]xpr" }
+keymap["r"]["b"]["f"] = { "<CMD>SearchReplaceMultiBufferCFile<CR>", "[f]ile" }
+
+lvim.keys.visual_block_mode["<C-r>"] = [[<CMD>SearchReplaceSingleBufferVisualSelection<CR>]]
+lvim.keys.visual_block_mode["<C-s>"] = [[<CMD>SearchReplaceWithinVisualSelection<CR>]]
+lvim.keys.visual_block_mode["<C-b>"] = [[<CMD>SearchReplaceWithinVisualSelectionCWord<CR>]]
+
+vim.o.inccommand = "split"
+
+-- 查询替换
+keymap["S"] = { name = "Search And Replace" }
+keymap["S"]["w"] = { "<cmd>lua require('spectre').open_visual({select_word=true})<CR>", "Word" }
+keymap["S"]["c"] = { "viw:lua require('spectre').open_file_search()<cr>", "Current Buffer" }
+
+-- 复制当前文件完整路径
+keymap["y"] = { name = "Copy File Path" }
+keymap["y"]["y"] = { ":Cppath<CR>", "Copy Current File Path" }
 
 -- 剪切功能兼容
 vim.g.clipboard = {
@@ -39,75 +72,75 @@ lvim.colorscheme = "lunar"
 lvim.leader = "space"
 
 -- 添加自己的快捷键
-lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
-lvim.keys.normal_mode[","] = "$a,<esc>"
-lvim.keys.normal_mode["<leader>1"] = ":BufferLineGoToBuffer 1<CR>"
-lvim.keys.normal_mode["<leader>2"] = ":BufferLineGoToBuffer 2<CR>"
-lvim.keys.normal_mode["<leader>3"] = ":BufferLineGoToBuffer 3<CR>"
-lvim.keys.normal_mode["<leader>4"] = ":BufferLineGoToBuffer 4<CR>"
-lvim.keys.normal_mode["<leader>5"] = ":BufferLineGoToBuffer 5<CR>"
-lvim.keys.normal_mode["<leader>6"] = ":BufferLineGoToBuffer 6<CR>"
-lvim.keys.normal_mode["<leader>7"] = ":BufferLineGoToBuffer 7<CR>"
-lvim.keys.normal_mode["<leader>8"] = ":BufferLineGoToBuffer 8<CR>"
-lvim.keys.normal_mode["<leader>9"] = ":BufferLineGoToBuffer 9<CR>"
-lvim.keys.normal_mode[";"] = "$a;<esc>"
-lvim.keys.normal_mode["}"] = "$a}<esc>"
-lvim.keys.normal_mode["  "] = "/"
-lvim.keys.normal_mode["n"] = "nzzzv"
-lvim.keys.normal_mode["N"] = "Nzzzv"
-lvim.keys.normal_mode["L"] = "$"
-lvim.keys.normal_mode["<S-g>"] = "Gzz"
-lvim.keys.normal_mode["H"] = "^"
-lvim.keys.visual_mode["L"] = "$"
-lvim.keys.visual_mode["H"] = "^"
-lvim.keys.normal_mode["  "] = "/"
-lvim.keys.normal_mode["cp"] = "yap<S-}>p"
-lvim.keys.normal_mode["cn"] = "*``cgn"
-lvim.keys.normal_mode["cN"] = "*``cgN"
-lvim.keys.normal_mode["<leader>a"] = "ggVG"
-lvim.keys.normal_mode["<leader>="] = "m`=ip``"
-lvim.keys.normal_mode["<leader>gt"] = ":GitBlameToggle<CR>"
-lvim.keys.normal_mode["Q"] = "@q"
-lvim.keys.normal_mode[";"] = "m`A;<esc>``"
-lvim.keys.normal_mode[","] = "m`A,<esc>``"
-lvim.keys.normal_mode["'"] = "ciw''<esc>P"
-lvim.keys.normal_mode["`"] = "ciw``<esc>P"
-lvim.keys.normal_mode["ms "] = "ciw  <esc>P"
-lvim.keys.visual_mode["ms "] = "c  <esc>P"
-lvim.keys.visual_mode["'"] = "c''<esc>P"
-lvim.keys.normal_mode["("] = "ciw()<esc>P"
-lvim.keys.visual_mode["("] = "c()<esc>P"
-lvim.keys.normal_mode["["] = "ciw[  ]<esc>hP"
-lvim.keys.visual_mode["["] = "c[  ]<esc>hP"
-lvim.keys.normal_mode["{"] = "ciw{  }<esc>hP"
-lvim.keys.visual_mode["{"] = "c{  }<esc>hP"
-lvim.keys.normal_mode["\""] = "ciw\"\"<esc>P"
-lvim.keys.visual_mode["\""] = "c\"\"<esc>P"
-lvim.keys.normal_mode["<C-l"] = "<C-w>l"
-lvim.keys.normal_mode["<C-h"] = "<C-w>h"
-lvim.keys.normal_mode["<C-j"] = "<C-w>j"
-lvim.keys.normal_mode["<C-k"] = "<C-w>k"
-lvim.keys.normal_mode["<leader>j"] = "mjo<esc>`j"
-lvim.keys.normal_mode["<leader>J"] = "mjO<esc>`j"
+zmy["<C-s>"] = ":w<cr>"
+zmy[","] = "$a,<esc>"
+zmy["<leader>1"] = ":BufferLineGoToBuffer 1<CR>"
+zmy["<leader>2"] = ":BufferLineGoToBuffer 2<CR>"
+zmy["<leader>3"] = ":BufferLineGoToBuffer 3<CR>"
+zmy["<leader>4"] = ":BufferLineGoToBuffer 4<CR>"
+zmy["<leader>5"] = ":BufferLineGoToBuffer 5<CR>"
+zmy["<leader>6"] = ":BufferLineGoToBuffer 6<CR>"
+zmy["<leader>7"] = ":BufferLineGoToBuffer 7<CR>"
+zmy["<leader>8"] = ":BufferLineGoToBuffer 8<CR>"
+zmy["<leader>9"] = ":BufferLineGoToBuffer 9<CR>"
+zmy[";"] = "$a;<esc>"
+zmy["}"] = "$a}<esc>"
+zmy["  "] = "/"
+zmy["n"] = "nzzzv"
+zmy["N"] = "Nzzzv"
+zmy["L"] = "$"
+zmy["<S-g>"] = "Gzz"
+zmy["H"] = "^"
+zh["L"] = "$"
+zh["H"] = "^"
+zmy["  "] = "/"
+zmy["cp"] = "yap<S-}>p"
+zmy["cn"] = "*``cgn"
+zmy["cN"] = "*``cgN"
+zmy["<leader>a"] = "ggVG"
+zmy["<leader>="] = "m`=ip``"
+zmy["<leader>gt"] = ":GitBlameToggle<CR>"
+zmy["Q"] = "@q"
+zmy[";"] = "m`A;<esc>``"
+zmy[","] = "m`A,<esc>``"
+zmy["'"] = "ciw''<esc>P"
+zmy["`"] = "ciw``<esc>P"
+zmy["ms "] = "ciw  <esc>P"
+zh["ms "] = "c  <esc>P"
+zh["'"] = "c''<esc>P"
+zmy["("] = "ciw()<esc>P"
+zh["("] = "c()<esc>P"
+zmy["["] = "ciw[  ]<esc>hP"
+zh["["] = "c[  ]<esc>hP"
+zmy["{"] = "ciw{  }<esc>hP"
+zh["{"] = "c{  }<esc>hP"
+zmy["\""] = "ciw\"\"<esc>P"
+zh["\""] = "c\"\"<esc>P"
+zmy["<C-l"] = "<C-w>l"
+zmy["<C-h"] = "<C-w>h"
+zmy["<C-j"] = "<C-w>j"
+zmy["<C-k"] = "<C-w>k"
+zmy["<leader>j"] = "mjo<esc>`j"
+zmy["<leader>J"] = "mjO<esc>`j"
 
 -- 激活一些插件及配置
-lvim.builtin.alpha.active = true
-lvim.builtin.alpha.mode = "dashboard"
-lvim.builtin.terminal.active = true
-lvim.builtin.terminal.shell = "pwsh.exe -NoLogo"
-lvim.builtin.nvimtree.setup.diagnostics.enable = nil
-lvim.builtin.nvimtree.setup.filters.custom = nil
-lvim.builtin.nvimtree.setup.git.enable = nil
-lvim.builtin.nvimtree.setup.update_cwd = nil
-lvim.builtin.nvimtree.setup.update_focused_file.update_cwd = nil
-lvim.builtin.nvimtree.setup.view.side = "left"
-lvim.builtin.nvimtree.setup.renderer.highlight_git = nil
-lvim.builtin.nvimtree.setup.renderer.icons.show.git = nil
+xl.alpha.active = true
+xl.alpha.mode = "dashboard"
+xl.terminal.active = true
+xl.terminal.shell = "pwsh.exe -NoLogo"
+xl.nvimtree.setup.diagnostics.enable = nil
+xl.nvimtree.setup.filters.custom = nil
+xl.nvimtree.setup.git.enable = nil
+xl.nvimtree.setup.update_cwd = nil
+xl.nvimtree.setup.update_focused_file.update_cwd = nil
+xl.nvimtree.setup.view.side = "left"
+xl.nvimtree.setup.renderer.highlight_git = nil
+xl.nvimtree.setup.renderer.icons.show.git = nil
 
 -- treesitter 插件相关配置
-lvim.builtin.treesitter.ensure_installed = {} -- 禁止自动安装相关语法解析
-lvim.builtin.treesitter.ignore_install = { "haskell" } -- 忽略安装的语法解析语言
-lvim.builtin.treesitter.highlight.enable = true -- 开启高亮模式
+xl.treesitter.ensure_installed = {} -- 禁止自动安装相关语法解析
+xl.treesitter.ignore_install = { "haskell" } -- 忽略安装的语法解析语言
+xl.treesitter.highlight.enable = true -- 开启高亮模式
 
 
 -- 自定义安装插件
@@ -137,6 +170,16 @@ lvim.plugins = {
   {
     'f-person/git-blame.nvim',
     event = "BufRead"
+  },
+  {
+    "roobert/search-replace.nvim",
+    config = function()
+      require("search-replace").setup({
+        -- optionally override defaults
+        default_replace_single_buffer_options = "gcI",
+        default_replace_multi_buffer_options = "egcI",
+      })
+    end,
   }
 }
 
