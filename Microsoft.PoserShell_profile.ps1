@@ -7,7 +7,7 @@ Set-PSReadLineOption -PredictionSource History
 Import-Module -Name Terminal-Icons
 $Env:http_proxy="http://127.0.0.1:11223";
 $Env:https_proxy="http://127.0.0.1:11223";
-Set-Alias code 'C:\Users\lenovo\.local\bin\lvim.ps1'
+Set-Alias code '~\.local\bin\lvim.ps1'
 function vi {neovide -- -u C:\Users\Lenovo\AppData\Roaming\lunarvim\lvim\init.lua}
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
