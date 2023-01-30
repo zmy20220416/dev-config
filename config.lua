@@ -23,7 +23,7 @@ local zh = lvim.keys.visual_mode
 keymap["r"] = { name = "SearchReplaceSingleBuffer" }
 
 keymap["r"]["s"] =
-  { "<CMD>SearchReplaceSingleBufferSelections<CR>", "SearchReplaceSingleBuffer [s]elction list" }
+{ "<CMD>SearchReplaceSingleBufferSelections<CR>", "SearchReplaceSingleBuffer [s]elction list" }
 keymap["r"]["o"] = { "<CMD>SearchReplaceSingleBufferOpen<CR>", "[o]pen" }
 keymap["r"]["w"] = { "<CMD>SearchReplaceSingleBufferCWord<CR>", "[w]ord" }
 keymap["r"]["W"] = { "<CMD>SearchReplaceSingleBufferCWORD<CR>", "[W]ORD" }
@@ -33,7 +33,7 @@ keymap["r"]["f"] = { "<CMD>SearchReplaceSingleBufferCFile<CR>", "[f]ile" }
 keymap["r"]["b"] = { name = "SearchReplaceMultiBuffer" }
 
 keymap["r"]["b"]["s"] =
-  { "<CMD>SearchReplaceMultiBufferSelections<CR>","SearchReplaceMultiBuffer [s]elction list" }
+{ "<CMD>SearchReplaceMultiBufferSelections<CR>", "SearchReplaceMultiBuffer [s]elction list" }
 keymap["r"]["b"]["o"] = { "<CMD>SearchReplaceMultiBufferOpen<CR>", "[o]pen" }
 keymap["r"]["b"]["w"] = { "<CMD>SearchReplaceMultiBufferCWord<CR>", "[w]ord" }
 keymap["r"]["b"]["W"] = { "<CMD>SearchReplaceMultiBufferCWORD<CR>", "[W]ORD" }
@@ -70,7 +70,7 @@ vim.g.clipboard = {
 -- 通用配置
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
-lvim.transparent_window = true
+lvim.transparent_window = false
 lvim.colorscheme = "lunar"
 lvim.leader = "space"
 
@@ -183,7 +183,11 @@ lvim.plugins = {
         default_replace_multi_buffer_options = "egcI",
       })
     end,
-  }
+  },
+  {
+    "npxbr/glow.nvim",
+    ft = { "markdown" }
+  },
 }
 
 -- 创建自定义命令
