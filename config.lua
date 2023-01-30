@@ -1,3 +1,7 @@
+-- 添加 neovide 配置
+vim.cmd('source ~/.config/nvim/neovide.vim')
+
+-- 默认 shell 配置
 vim.opt.shell = "pwsh.exe -NoLogo"
 vim.opt.timeoutlen = 1
 vim.opt.shellcmdflag =
@@ -13,7 +17,6 @@ local xl = lvim.builtin
 local keymap = lvim.builtin.which_key.mappings
 local zmy = lvim.keys.normal_mode
 local zh = lvim.keys.visual_mode
-
 
 -- 向 whichKey 插件上添加新的快捷键
 -- 查询和替换快捷键
