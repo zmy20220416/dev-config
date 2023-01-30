@@ -55,6 +55,12 @@ keymap["S"]["c"] = { "viw:lua require('spectre').open_file_search()<cr>", "Curre
 keymap["y"] = { name = "Copy File Path" }
 keymap["y"]["y"] = { ":Cppath<CR>", "Copy Current File Path" }
 
+-- markdown 预览
+keymap["m"] = { name = "Markdown Preview" }
+keymap["m"]["p"] = { "<cmd>MarkdownPreview<CR>", "Markdown Preview" }
+keymap["m"]["s"] = { "<cmd>MarkdownPreviewStop<CR>", "Markdown Preview Stop" }
+keymap["m"]["t"] = { "<cmd>MarkdownPreviewToggle<CR>", "Markdown Preview Toggle" }
+
 -- 剪切功能兼容
 vim.g.clipboard = {
   copy = {
@@ -185,8 +191,11 @@ lvim.plugins = {
     end,
   },
   {
-    "npxbr/glow.nvim",
-    ft = { "markdown" }
+    "iamcco/markdown-preview.nvim",
+    ft = "markdown",
+    config = function()
+      vim.g.mkdp_auto_start = 1
+    end,
   },
 }
 
