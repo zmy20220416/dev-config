@@ -3,8 +3,7 @@ $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
-Set-PSReadLineOption -PredictionSource History
-Import-Module -Name Terminal-Icons
+# Import-Module -Name Terminal-Icons
 $Env:http_proxy="http://127.0.0.1:11223";
 $Env:https_proxy="http://127.0.0.1:11223";
 Set-Alias code '~\.local\bin\lvim.ps1'
