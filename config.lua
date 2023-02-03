@@ -136,6 +136,7 @@ zmy["<leader>J"] = "mjO<esc>`j"
 xl.alpha.active = true
 xl.alpha.mode = "dashboard"
 xl.terminal.active = true
+-- xl.cmp.cmdline.enable = true
 xl.terminal.shell = "pwsh.exe -NoLogo"
 xl.nvimtree.setup.diagnostics.enable = nil
 xl.nvimtree.setup.filters.custom = nil
@@ -197,6 +198,28 @@ lvim.plugins = {
       vim.g.mkdp_auto_start = 1
     end,
   },
+  {
+    'echasnovski/mini.indentscope', version = '*',
+    config = function()
+      require('mini.indentscope').setup({
+        draw = {
+          delay = 10
+        }
+      })
+    end,
+  },
+  {
+    "folke/noice.nvim",
+    config = function()
+      require("noice").setup({
+        -- add any options here
+      })
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    }
+  }
 }
 
 -- 创建自定义命令
