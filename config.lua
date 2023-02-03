@@ -171,12 +171,12 @@ lvim.plugins = {
       vim.api.nvim_set_keymap("n", "s", ":HopWord<cr>", { silent = true })
     end,
   },
-  {
-    "tzachar/cmp-tabnine",
-    build = "./install.sh",
-    dependencies = "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-  },
+  -- {
+  --   "tzachar/cmp-tabnine",
+  --   build = "./install.sh",
+  --   dependencies = "hrsh7th/nvim-cmp",
+  --   event = "InsertEnter",
+  -- },
   {
     'f-person/git-blame.nvim',
     event = "BufRead"
