@@ -173,10 +173,6 @@ lvim.plugins = {
   },
   -- {
   --   "tzachar/cmp-tabnine",
-<<<<<<< HEAD
-  --   build = "./install.sh",
-=======
->>>>>>> main
   --   dependencies = "hrsh7th/nvim-cmp",
   --   event = "InsertEnter",
   -- },
