@@ -197,7 +197,7 @@ lvim.plugins = {
       vim.g.mkdp_auto_start = 1
     end,
   },
-  {
+  --[[ {
     "folke/noice.nvim",
     config = function()
       require("noice").setup({
@@ -207,7 +207,7 @@ lvim.plugins = {
     dependencies = {
       "MunifTanjim/nui.nvim",
     }
-  }
+  } ]]
 }
 
 -- 创建自定义命令
