@@ -173,7 +173,10 @@ lvim.plugins = {
   },
   -- {
   --   "tzachar/cmp-tabnine",
+<<<<<<< HEAD
   --   build = "./install.sh",
+=======
+>>>>>>> main
   --   dependencies = "hrsh7th/nvim-cmp",
   --   event = "InsertEnter",
   -- },
@@ -199,16 +202,6 @@ lvim.plugins = {
     end,
   },
   {
-    'echasnovski/mini.indentscope', version = '*',
-    config = function()
-      require('mini.indentscope').setup({
-        draw = {
-          delay = 10
-        }
-      })
-    end,
-  },
-  {
     "folke/noice.nvim",
     config = function()
       require("noice").setup({
@@ -217,7 +210,6 @@ lvim.plugins = {
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
     }
   }
 }
