@@ -171,12 +171,11 @@ lvim.plugins = {
       vim.api.nvim_set_keymap("n", "s", ":HopWord<cr>", { silent = true })
     end,
   },
-  {
-    "tzachar/cmp-tabnine",
-    build = "./install.sh",
-    dependencies = "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-  },
+  -- {
+  --   "tzachar/cmp-tabnine",
+  --   dependencies = "hrsh7th/nvim-cmp",
+  --   event = "InsertEnter",
+  -- },
   {
     'f-person/git-blame.nvim',
     event = "BufRead"
@@ -198,17 +197,7 @@ lvim.plugins = {
       vim.g.mkdp_auto_start = 1
     end,
   },
-  {
-    'echasnovski/mini.indentscope', version = '*',
-    config = function()
-      require('mini.indentscope').setup({
-        draw = {
-          delay = 10
-        }
-      })
-    end,
-  },
-  {
+  --[[ {
     "folke/noice.nvim",
     config = function()
       require("noice").setup({
@@ -217,9 +206,8 @@ lvim.plugins = {
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
     }
-  }
+  } ]]
 }
 
 -- 创建自定义命令
