@@ -184,7 +184,6 @@ lvim.plugins = {
     "roobert/search-replace.nvim",
     config = function()
       require("search-replace").setup({
-        -- optionally override defaults
         default_replace_single_buffer_options = "gcI",
         default_replace_multi_buffer_options = "egcI",
       })
@@ -197,20 +196,6 @@ lvim.plugins = {
       vim.g.mkdp_auto_start = 1
     end,
   },
-  -- {
-  --   "Exafunction/codeium.vim"
-  -- }
-  --[[ {
-    "folke/noice.nvim",
-    config = function()
-      require("noice").setup({
-        -- add any options here
-      })
-    end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-    }
-  } ]]
 }
 
 -- 创建自定义命令
