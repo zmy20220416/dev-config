@@ -1,0 +1,40 @@
+{
+  "react function component": {
+    "prefix": "zfc",
+    "body": ["
+      /*
+      * @file $1
+      * @author zhangheng :zhangheng@massmeet.cn
+      * @version 1.0
+      * */
+
+      /* 引入第三方模块或样式等 */
+      import React, { useMemo } from 'react';
+      import { View } from 'react-native';
+      /* 引入第三方模块或样式等 */
+
+      /* 定义接口或类型等 */
+      interface $0Props {}
+      /* 定义接口或类型等 */
+
+      const $0: React.FC<$0Props> = () => {
+        
+        /* 统一管理组件状态和方法等 */
+        const Store = {
+          data: useMemo(() => ({
+
+          }), []),
+          methods: useMemo(() => ({
+
+          }), []),
+          render: {}
+        }
+        /* 统一管理组件状态和方法等 */
+
+        return null
+      }
+
+      export default $0;
+      "],"description": "react 函数式组件模板"
+    }
+  }
