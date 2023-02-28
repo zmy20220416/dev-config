@@ -76,7 +76,7 @@ vim.g.clipboard = {
 -- 通用配置
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
-lvim.transparent_window = false
+lvim.transparent_window = true
 lvim.colorscheme = "lunar"
 lvim.leader = "space"
 
@@ -171,11 +171,11 @@ lvim.plugins = {
       vim.api.nvim_set_keymap("n", "s", ":HopWord<cr>", { silent = true })
     end,
   },
-  {
-    "tzachar/cmp-tabnine",
-    dependencies = "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-  },
+  -- {
+  --   "tzachar/cmp-tabnine",
+  --   dependencies = "hrsh7th/nvim-cmp",
+  --   event = "InsertEnter",
+  -- },
   {
     'f-person/git-blame.nvim',
     event = "BufRead"
