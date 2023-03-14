@@ -1,9 +1,9 @@
 -- 添加 neovide 配置
-vim.cmd('source ~/.config/nvim/neovide.vim')
-
+vim.cmd('source ~/.config/vim/neovide.vim')
 -- 默认 shell 配置
 vim.opt.shell = "pwsh.exe -NoLogo"
 vim.opt.timeoutlen = 1
+vim.opt.relativenumber = true
 vim.opt.shellcmdflag =
 "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
 vim.cmd [[
@@ -15,8 +15,9 @@ vim.cmd [[
 -- 定义别名
 local xl = lvim.builtin
 local keymap = lvim.builtin.which_key.mappings
-local zmy = lvim.keys.normal_mode
-local zh = lvim.keys.visual_mode
+local nm = lvim.keys.normal_mode
+local vm = lvim.keys.visual_mode
+local im = lvim.keys.insert_mode
 
 -- 向 whichKey 插件上添加新的快捷键
 -- 查询和替换快捷键
@@ -81,62 +82,68 @@ lvim.colorscheme = "lunar"
 lvim.leader = "space"
 
 -- 添加自己的快捷键
-zmy["<C-s>"] = ":w<cr>"
-zmy[","] = "$a,<esc>"
-zmy["<leader>1"] = ":BufferLineGoToBuffer 1<CR>"
-zmy["<leader>2"] = ":BufferLineGoToBuffer 2<CR>"
-zmy["<leader>3"] = ":BufferLineGoToBuffer 3<CR>"
-zmy["<leader>4"] = ":BufferLineGoToBuffer 4<CR>"
-zmy["<leader>5"] = ":BufferLineGoToBuffer 5<CR>"
-zmy["<leader>6"] = ":BufferLineGoToBuffer 6<CR>"
-zmy["<leader>7"] = ":BufferLineGoToBuffer 7<CR>"
-zmy["<leader>8"] = ":BufferLineGoToBuffer 8<CR>"
-zmy["<leader>9"] = ":BufferLineGoToBuffer 9<CR>"
-zmy[";"] = "$a;<esc>"
-zmy["}"] = "$a}<esc>"
-zmy["  "] = "/"
-zmy["n"] = "nzzzv"
-zmy["N"] = "Nzzzv"
-zmy["L"] = "$"
-zmy["<S-g>"] = "Gzz"
-zmy["H"] = "^"
-zh["L"] = "$"
-zh["H"] = "^"
-zmy["  "] = "/"
-zmy["cp"] = "yap<S-}>p"
-zmy["cn"] = "*``cgn"
-zmy["cN"] = "*``cgN"
-zmy["<leader>a"] = "ggVG"
-zmy["<leader>="] = "m`=ip``"
-zmy["<leader>gt"] = ":GitBlameToggle<CR>"
-zmy["Q"] = "@q"
-zmy[";"] = "m`A;<esc>``"
-zmy[","] = "m`A,<esc>``"
-zmy["'"] = "ciw''<esc>P"
-zmy["`"] = "ciw``<esc>P"
-zmy["ms "] = "ciw  <esc>P"
-zh["ms "] = "c  <esc>P"
-zh["'"] = "c''<esc>P"
-zmy["("] = "ciw()<esc>P"
-zh["("] = "c()<esc>P"
-zmy["["] = "ciw[  ]<esc>hP"
-zh["["] = "c[  ]<esc>hP"
-zmy["{"] = "ciw{  }<esc>hP"
-zh["{"] = "c{  }<esc>hP"
-zmy["\""] = "ciw\"\"<esc>P"
-zh["\""] = "c\"\"<esc>P"
-zmy["<C-l"] = "<C-w>l"
-zmy["<C-h"] = "<C-w>h"
-zmy["<C-j"] = "<C-w>j"
-zmy["<C-k"] = "<C-w>k"
-zmy["<leader>j"] = "mjo<esc>`j"
-zmy["<leader>J"] = "mjO<esc>`j"
+nm["<C-s>"] = ":w<cr>"
+nm[","] = "$a,<esc>"
+nm["<leader>1"] = ":BufferLineGoToBuffer 1<CR>"
+nm["<leader>2"] = ":BufferLineGoToBuffer 2<CR>"
+nm["<leader>3"] = ":BufferLineGoToBuffer 3<CR>"
+nm["<leader>4"] = ":BufferLineGoToBuffer 4<CR>"
+nm["<leader>5"] = ":BufferLineGoToBuffer 5<CR>"
+nm["<leader>6"] = ":BufferLineGoToBuffer 6<CR>"
+nm["<leader>7"] = ":BufferLineGoToBuffer 7<CR>"
+nm["<leader>8"] = ":BufferLineGoToBuffer 8<CR>"
+nm["<leader>9"] = ":BufferLineGoToBuffer 9<CR>"
+nm["}"] = "$a}<esc>"
+nm["  "] = "/"
+nm["n"] = "nzzzv"
+nm["N"] = "Nzzzv"
+nm["L"] = "$"
+nm["<S-g>"] = "Gzz"
+nm["H"] = "^"
+vm["L"] = "$"
+vm["H"] = "^"
+nm["  "] = "/"
+nm["cp"] = "yap<S-}>p"
+nm["cn"] = "*``cgn"
+nm["cN"] = "*``cgN"
+nm["<leader>a"] = "ggVG"
+nm["<leader>="] = "m`=ip``"
+nm["<leader>gt"] = ":GitBlameToggle<CR>"
+nm["Q"] = "@q"
+nm["vv"] = "^v$h"
+-- nm[";"] = "m`A;<esc>``"
+-- nm[","] = "m`A,<esc>``"
+nm[";"] = "m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:nohl<CR><esc>``"
+nm[","] = "m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``"
+nm["'"] = "ciw''<esc>P"
+nm["`"] = "ciw``<esc>P"
+nm["ms "] = "ciw  <esc>P"
+vm["ms "] = "c  <esc>P"
+vm["'"] = "c''<esc>P"
+nm["("] = "m`ciw()<esc>P``"
+vm["("] = "c()<esc>P"
+nm["["] = "m`ciw[  ]<esc>hP``"
+vm["["] = "c[  ]<esc>hP"
+nm["{"] = "m`ciw{  }<esc>hP``"
+vm["{"] = "c{  }<esc>hP"
+nm["\""] = "ciw\"\"<esc>P"
+vm["\""] = "c\"\"<esc>P"
+nm["<C-l"] = "<C-w>l"
+nm["<C-h"] = "<C-w>h"
+nm["<C-j"] = "<C-w>j"
+nm["<C-k"] = "<C-w>k"
+nm["<leader>j"] = "mjo<esc>`j"
+nm["<leader>J"] = "mjO<esc>`j"
+im["<C-z>"] = "<esc>A"
+im["<C-e>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:nohl<CR><esc>``a"
+im["<C-d>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``a"
 
 -- 激活一些插件及配置
 xl.alpha.active = true
+xl.dap.active = false
 xl.alpha.mode = "dashboard"
 xl.terminal.active = true
--- xl.cmp.cmdline.enable = true
+xl.cmp.cmdline.enable = true
 xl.terminal.shell = "pwsh.exe -NoLogo"
 xl.nvimtree.setup.diagnostics.enable = nil
 xl.nvimtree.setup.filters.custom = nil
@@ -148,9 +155,9 @@ xl.nvimtree.setup.renderer.highlight_git = nil
 xl.nvimtree.setup.renderer.icons.show.git = nil
 
 -- treesitter 插件相关配置
-xl.treesitter.ensure_installed = {} -- 禁止自动安装相关语法解析
+xl.treesitter.ensure_installed = {}          -- 禁止自动安装相关语法解析
 xl.treesitter.ignore_install = { "haskell" } -- 忽略安装的语法解析语言
-xl.treesitter.highlight.enable = true -- 开启高亮模式
+xl.treesitter.highlight.enable = true        -- 开启高亮模式
 
 
 -- 自定义安装插件
@@ -171,11 +178,11 @@ lvim.plugins = {
       vim.api.nvim_set_keymap("n", "s", ":HopWord<cr>", { silent = true })
     end,
   },
-  -- {
-  --   "tzachar/cmp-tabnine",
-  --   dependencies = "hrsh7th/nvim-cmp",
-  --   event = "InsertEnter",
-  -- },
+  {
+    "tzachar/cmp-tabnine",
+    dependencies = "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+  },
   {
     'f-person/git-blame.nvim',
     event = "BufRead"
@@ -196,6 +203,12 @@ lvim.plugins = {
       vim.g.mkdp_auto_start = 1
     end,
   },
+  {
+    'rmagatti/goto-preview',
+    config = function()
+      require('goto-preview').setup {}
+    end
+  },
 }
 
 -- 创建自定义命令
@@ -204,3 +217,9 @@ vim.api.nvim_create_user_command("Cppath", function()
   vim.fn.setreg("+", path)
   vim.notify('Copied "' .. path .. '" to the clipboard!')
 end, {})
+
+vim.keymap.set("n", "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
+vim.keymap.set("n", "gpt", "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>", { noremap = true })
+vim.keymap.set("n", "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", { noremap = true })
+vim.keymap.set("n", "gP", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
+vim.keymap.set("n", "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
