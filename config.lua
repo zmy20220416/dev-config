@@ -209,6 +209,33 @@ lvim.plugins = {
       require('goto-preview').setup {}
     end
   },
+  {
+    "zbirenbaum/copilot.lua",
+    event = { "VimEnter" },
+    config = function()
+      vim.defer_fn(function()
+        require("copilot").setup {
+          plugin_manager_path = get_runtime_dir() .. "/site/pack/lazy",
+          suggestion = {
+            auto_trigger = true,
+            keymap = {
+              accept = "<A-f>",
+              accept_word = false,
+              accept_line = false,
+              next = "<Tab>",
+              prev = "<S-Tab>",
+              dismiss = "<A-c>",
+            },
+          }
+        }
+      end, 100)
+    end,
+  },
+
+  {
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua", "nvim-cmp" },
+  },
 }
 
 -- 创建自定义命令
@@ -223,3 +250,5 @@ vim.keymap.set("n", "gpt", "<cmd>lua require('goto-preview').goto_preview_type_d
 vim.keymap.set("n", "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", { noremap = true })
 vim.keymap.set("n", "gP", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
 vim.keymap.set("n", "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
+lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
+table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
