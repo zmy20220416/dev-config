@@ -102,7 +102,8 @@ nm["<S-g>"] = "Gzz"
 nm["H"] = "^"
 vm["L"] = "$"
 vm["H"] = "^"
-nm["  "] = "/"
+nm["  "] = "/<C-r><C-w><CR>"
+nm["zlg"] = "^v$hcconsole.log()<esc>P"
 nm["cp"] = "yap<S-}>p"
 nm["cn"] = "*``cgn"
 nm["cN"] = "*``cgN"
@@ -216,6 +217,9 @@ lvim.plugins = {
       vim.defer_fn(function()
         require("copilot").setup {
           plugin_manager_path = get_runtime_dir() .. "/site/pack/lazy",
+          panel = {
+            auto_refresh = true,
+          },
           suggestion = {
             auto_trigger = true,
             keymap = {
