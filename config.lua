@@ -4,6 +4,7 @@ vim.cmd('source ~/.config/vim/neovide.vim')
 vim.opt.shell = "pwsh.exe -NoLogo"
 vim.opt.timeoutlen = 1
 vim.opt.relativenumber = true
+vim.opt.colorcolumn = "80"
 vim.opt.shellcmdflag =
 "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
 vim.cmd [[
@@ -102,11 +103,12 @@ nm["<S-g>"] = "Gzz"
 nm["H"] = "^"
 vm["L"] = "$"
 vm["H"] = "^"
-nm["  "] = "/<C-r><C-w><CR>"
+-- nm["  "] = "/<C-r><C-w><CR>"
 nm["zlg"] = "^v$hcconsole.log()<esc>P"
 nm["cp"] = "yap<S-}>p"
 nm["cn"] = "*``cgn"
 nm["cN"] = "*``cgN"
+nm["cg"] = "<cmd>ChatGPTEditWithInstructions<CR>"
 nm["<leader>a"] = "ggVG"
 nm["<leader>="] = "m`=ip``"
 nm["<leader>gt"] = ":GitBlameToggle<CR>"
@@ -118,8 +120,8 @@ nm[";"] = "m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:nohl<CR><
 nm[","] = "m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``"
 nm["'"] = "ciw''<esc>P"
 nm["`"] = "ciw``<esc>P"
-nm["ms "] = "ciw  <esc>P"
-vm["ms "] = "c  <esc>P"
+-- nm["ms "] = "ciw  <esc>P"
+-- vm["ms "] = "c  <esc>P"
 vm["'"] = "c''<esc>P"
 nm["("] = "m`ciw()<esc>P``"
 vm["("] = "c()<esc>P"
@@ -134,7 +136,7 @@ nm["<C-h"] = "<C-w>h"
 nm["<C-j"] = "<C-w>j"
 nm["<C-k"] = "<C-w>k"
 nm["<leader>j"] = "mjo<esc>`j"
-nm["<leader>J"] = "mjO<esc>`j"
+nm["<leader>k"] = "mjO<esc>`j"
 im["<C-z>"] = "<esc>A"
 im["<C-e>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:nohl<CR><esc>``a"
 im["<C-d>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``a"
@@ -159,7 +161,6 @@ xl.nvimtree.setup.renderer.icons.show.git = nil
 xl.treesitter.ensure_installed = {}          -- 禁止自动安装相关语法解析
 xl.treesitter.ignore_install = { "haskell" } -- 忽略安装的语法解析语言
 xl.treesitter.highlight.enable = true        -- 开启高亮模式
-
 
 -- 自定义安装插件
 lvim.plugins = {
@@ -207,12 +208,15 @@ lvim.plugins = {
   {
     'rmagatti/goto-preview',
     config = function()
-      require('goto-preview').setup {}
+      require('goto-preview').setup {
+        width = 200,
+        height = 20,
+      }
     end
   },
   {
     "zbirenbaum/copilot.lua",
-    event = { "VimEnter" },
+    -- event = "InsertEnter",
     config = function()
       vim.defer_fn(function()
         require("copilot").setup {
@@ -239,7 +243,51 @@ lvim.plugins = {
   {
     "zbirenbaum/copilot-cmp",
     after = { "copilot.lua", "nvim-cmp" },
+    config = function()
+      require("copilot_cmp").setup {
+        formatters = {
+          insert_text = require("copilot_cmp.format").remove_existing,
+        },
+      }
+    end,
   },
+  {
+    'Bekaboo/deadcolumn.nvim',
+    event = "VeryLazy",
+    config = function()
+      require('deadcolumn').setup({
+        modes = { 'i', 'ic', 'ix', 'R', 'Rc', 'Rx', 'Rv', 'Rvc', 'Rvx', 'n' },
+      })
+    end
+  },
+  {
+    "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("chatgpt").setup({
+        keymaps = {
+          close = { "<C-c>" },
+          submit = "<A-s>",
+          yank_last = "<C-y>",
+          yank_last_code = "<C-k>",
+          scroll_up = "<C-u>",
+          scroll_down = "<C-d>",
+          toggle_settings = "<C-o>",
+          new_session = "<C-n>",
+          cycle_windows = "<Tab>",
+          -- in the Sessions pane
+          select_session = "<Space>",
+          rename_session = "r",
+          delete_session = "d",
+        },
+      })
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
+  }
 }
 
 -- 创建自定义命令
@@ -249,10 +297,34 @@ vim.api.nvim_create_user_command("Cppath", function()
   vim.notify('Copied "' .. path .. '" to the clipboard!')
 end, {})
 
-vim.keymap.set("n", "gpd", "<cmd>lua require('goto-preview').goto_preview_definition()<CR>", { noremap = true })
-vim.keymap.set("n", "gpt", "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>", { noremap = true })
-vim.keymap.set("n", "gpi", "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>", { noremap = true })
-vim.keymap.set("n", "gP", "<cmd>lua require('goto-preview').close_all_win()<CR>", { noremap = true })
-vim.keymap.set("n", "gpr", "<cmd>lua require('goto-preview').goto_preview_references()<CR>", { noremap = true })
+vim.keymap.set(
+  "n",
+  "gpd",
+  "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",
+  { noremap = true }
+)
+vim.keymap.set(
+  "n",
+  "gpt",
+  "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
+  { noremap = true }
+)
+vim.keymap.set(
+  "n",
+  "gpi",
+  "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
+  { noremap = true }
+)
+vim.keymap.set("n",
+  "gP",
+  "<cmd>lua require('goto-preview').close_all_win()<CR>",
+  { noremap = true }
+)
+vim.keymap.set(
+  "n",
+  "gpr",
+  "<cmd>lua require('goto-preview').goto_preview_references()<CR>",
+  { noremap = true }
+)
 lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
 table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
