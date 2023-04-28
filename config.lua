@@ -1,5 +1,5 @@
 -- 添加 neovide 配置
-vim.cmd('source ~/.config/vim/neovide.vim')
+vim.cmd('source ~/.config/nvim/neovide.vim')
 -- 默认 shell 配置
 vim.opt.shell = "pwsh.exe -NoLogo"
 vim.opt.timeoutlen = 1
@@ -78,8 +78,8 @@ vim.g.clipboard = {
 -- 通用配置
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
-lvim.transparent_window = true
-lvim.colorscheme = "lunar"
+lvim.transparent_window = false
+lvim.colorscheme = "embark"
 lvim.leader = "space"
 
 -- 添加自己的快捷键
@@ -287,7 +287,14 @@ lvim.plugins = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim"
     }
-  }
+  },
+  {
+    "Yazeed1s/oh-lucy.nvim"
+  },
+  {
+    "gbprod/nord.nvim"
+  },
+  { 'embark-theme/vim', name = 'embark' }
 }
 
 -- 创建自定义命令
