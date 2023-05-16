@@ -79,7 +79,7 @@ vim.g.clipboard = {
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 lvim.transparent_window = false
-lvim.colorscheme = "embark"
+lvim.colorscheme = "lunar"
 lvim.leader = "space"
 
 -- 添加自己的快捷键
@@ -289,12 +289,8 @@ lvim.plugins = {
     }
   },
   {
-    "Yazeed1s/oh-lucy.nvim"
+    "martinsione/darkplus.nvim"
   },
-  {
-    "gbprod/nord.nvim"
-  },
-  { 'embark-theme/vim', name = 'embark' }
 }
 
 -- 创建自定义命令
