@@ -1,57 +1,39 @@
--- 添加 neovide 配置
-vim.cmd('source ~/.config/nvim/neovide.vim')
--- 默认 shell 配置
-vim.opt.shell = "pwsh.exe -NoLogo"
-vim.opt.timeoutlen = 1
-vim.opt.relativenumber = true
-vim.opt.colorcolumn = "80"
-vim.opt.shellcmdflag =
-"-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
-vim.cmd [[
-                let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-                let &shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-                set shellquote= shellxquote=
-  ]]
-
 -- 定义别名
-local xl = lvim.builtin
+local builtin = lvim.builtin
 local keymap = lvim.builtin.which_key.mappings
 local nm = lvim.keys.normal_mode
 local vm = lvim.keys.visual_mode
 local im = lvim.keys.insert_mode
+local v = vim
+
+-- 添加 neovide 配置
+v.cmd('source ~/.config/nvim/neovide.vim')
+-- 默认 shell 配置
+-- v.opt.background = 'dark'
+-- darker lighter oceanic palenight (deep ocean)
+vim.g.material_style = 'darker'
+v.opt.shell = "pwsh.exe -NoLogo"
+v.opt.timeoutlen = 1
+v.opt.relativenumber = false
+v.opt.colorcolumn = "80"
+v.opt.shellcmdflag =
+"-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+v.cmd [[
+  let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+  let &shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+  set shellquote= shellxquote=
+]]
 
 -- 向 whichKey 插件上添加新的快捷键
--- 查询和替换快捷键
-keymap["r"] = { name = "SearchReplaceSingleBuffer" }
-
-keymap["r"]["s"] =
-{ "<CMD>SearchReplaceSingleBufferSelections<CR>", "SearchReplaceSingleBuffer [s]elction list" }
-keymap["r"]["o"] = { "<CMD>SearchReplaceSingleBufferOpen<CR>", "[o]pen" }
-keymap["r"]["w"] = { "<CMD>SearchReplaceSingleBufferCWord<CR>", "[w]ord" }
-keymap["r"]["W"] = { "<CMD>SearchReplaceSingleBufferCWORD<CR>", "[W]ORD" }
-keymap["r"]["e"] = { "<CMD>SearchReplaceSingleBufferCExpr<CR>", "[e]xpr" }
-keymap["r"]["f"] = { "<CMD>SearchReplaceSingleBufferCFile<CR>", "[f]ile" }
-
-keymap["r"]["b"] = { name = "SearchReplaceMultiBuffer" }
-
-keymap["r"]["b"]["s"] =
-{ "<CMD>SearchReplaceMultiBufferSelections<CR>", "SearchReplaceMultiBuffer [s]elction list" }
-keymap["r"]["b"]["o"] = { "<CMD>SearchReplaceMultiBufferOpen<CR>", "[o]pen" }
-keymap["r"]["b"]["w"] = { "<CMD>SearchReplaceMultiBufferCWord<CR>", "[w]ord" }
-keymap["r"]["b"]["W"] = { "<CMD>SearchReplaceMultiBufferCWORD<CR>", "[W]ORD" }
-keymap["r"]["b"]["e"] = { "<CMD>SearchReplaceMultiBufferCExpr<CR>", "[e]xpr" }
-keymap["r"]["b"]["f"] = { "<CMD>SearchReplaceMultiBufferCFile<CR>", "[f]ile" }
-
-lvim.keys.visual_block_mode["<C-r>"] = [[<CMD>SearchReplaceSingleBufferVisualSelection<CR>]]
-lvim.keys.visual_block_mode["<C-s>"] = [[<CMD>SearchReplaceWithinVisualSelection<CR>]]
-lvim.keys.visual_block_mode["<C-b>"] = [[<CMD>SearchReplaceWithinVisualSelectionCWord<CR>]]
-
-vim.o.inccommand = "split"
+v.o.inccommand = "split"
 
 -- 查询替换
 keymap["S"] = { name = "Search And Replace" }
 keymap["S"]["w"] = { "<cmd>lua require('spectre').open_visual({select_word=true})<CR>", "Word" }
 keymap["S"]["c"] = { "viw:lua require('spectre').open_file_search()<cr>", "Current Buffer" }
+keymap["S"]["t"] = { "<cmd>MurenToggle<CR>", "Muren Toggle" }
+keymap["S"]["o"] = { "<cmd>MurenOpen<CR>", "Muren Open" }
+keymap["S"]["r"] = { "<cmd>MurenFresh<CR>", "Muren Refresh" }
 
 -- 复制当前文件完整路径
 keymap["y"] = { name = "Copy File Path" }
@@ -64,7 +46,7 @@ keymap["m"]["s"] = { "<cmd>MarkdownPreviewStop<CR>", "Markdown Preview Stop" }
 keymap["m"]["t"] = { "<cmd>MarkdownPreviewToggle<CR>", "Markdown Preview Toggle" }
 
 -- 剪切功能兼容
-vim.g.clipboard = {
+v.g.clipboard = {
   copy = {
     ["+"] = "win32yank.exe -i --crlf",
     ["*"] = "win32yank.exe -i --crlf",
@@ -79,7 +61,7 @@ vim.g.clipboard = {
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 lvim.transparent_window = false
-lvim.colorscheme = "lunar"
+lvim.colorscheme = "material"
 lvim.leader = "space"
 
 -- 添加自己的快捷键
@@ -142,25 +124,25 @@ im["<C-e>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:
 im["<C-d>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``a"
 
 -- 激活一些插件及配置
-xl.alpha.active = true
-xl.dap.active = false
-xl.alpha.mode = "dashboard"
-xl.terminal.active = true
-xl.cmp.cmdline.enable = true
-xl.terminal.shell = "pwsh.exe -NoLogo"
-xl.nvimtree.setup.diagnostics.enable = nil
-xl.nvimtree.setup.filters.custom = nil
-xl.nvimtree.setup.git.enable = nil
-xl.nvimtree.setup.update_cwd = nil
-xl.nvimtree.setup.update_focused_file.update_cwd = nil
-xl.nvimtree.setup.view.side = "left"
-xl.nvimtree.setup.renderer.highlight_git = nil
-xl.nvimtree.setup.renderer.icons.show.git = nil
+builtin.alpha.active = true
+builtin.dap.active = false
+builtin.alpha.mode = "dashboard"
+builtin.terminal.active = true
+builtin.cmp.cmdline.enable = true
+builtin.terminal.shell = "pwsh.exe -NoLogo"
+builtin.nvimtree.setup.diagnostics.enable = true
+builtin.nvimtree.setup.filters.custom = nil
+builtin.nvimtree.setup.git.timeout = 500
+builtin.nvimtree.setup.update_cwd = nil
+builtin.nvimtree.setup.update_focused_file.update_cwd = nil
+builtin.nvimtree.setup.view.side = "left"
+builtin.nvimtree.setup.renderer.highlight_git = nil
+builtin.nvimtree.setup.renderer.icons.show.git = nil
 
 -- treesitter 插件相关配置
-xl.treesitter.ensure_installed = {}          -- 禁止自动安装相关语法解析
-xl.treesitter.ignore_install = { "haskell" } -- 忽略安装的语法解析语言
-xl.treesitter.highlight.enable = true        -- 开启高亮模式
+builtin.treesitter.ensure_installed = {}          -- 禁止自动安装相关语法解析
+builtin.treesitter.ignore_install = { "haskell" } -- 忽略安装的语法解析语言
+builtin.treesitter.highlight.enable = true        -- 开启高亮模式
 
 -- 自定义安装插件
 lvim.plugins = {
@@ -176,8 +158,8 @@ lvim.plugins = {
     event = "BufRead",
     config = function()
       require("hop").setup()
-      vim.api.nvim_set_keymap("n", "S", ":HopChar2<cr>", { silent = true })
-      vim.api.nvim_set_keymap("n", "s", ":HopWord<cr>", { silent = true })
+      v.api.nvim_set_keymap("n", "S", ":HopChar2<cr>", { silent = true })
+      v.api.nvim_set_keymap("n", "s", ":HopWord<cr>", { silent = true })
     end,
   },
   {
@@ -190,19 +172,10 @@ lvim.plugins = {
     event = "BufRead"
   },
   {
-    "roobert/search-replace.nvim",
-    config = function()
-      require("search-replace").setup({
-        default_replace_single_buffer_options = "gcI",
-        default_replace_multi_buffer_options = "egcI",
-      })
-    end,
-  },
-  {
     "iamcco/markdown-preview.nvim",
     ft = "markdown",
     config = function()
-      vim.g.mkdp_auto_start = 1
+      v.g.mkdp_auto_start = 1
     end,
   },
   {
@@ -218,7 +191,7 @@ lvim.plugins = {
     "zbirenbaum/copilot.lua",
     -- event = "InsertEnter",
     config = function()
-      vim.defer_fn(function()
+      v.defer_fn(function()
         require("copilot").setup {
           plugin_manager_path = get_runtime_dir() .. "/site/pack/lazy",
           panel = {
@@ -257,73 +230,66 @@ lvim.plugins = {
     config = function()
       require('deadcolumn').setup({
         modes = { 'i', 'ic', 'ix', 'R', 'Rc', 'Rx', 'Rv', 'Rvc', 'Rvx', 'n' },
+        blending = {
+          threshold = 0.75,
+          colorcode = "#9ece6a",
+          hlgroup = {
+            'Normal',
+            'background',
+          },
+        },
+        warning = {
+          alpha = 1,
+          offset = 0,
+          colorcode = "#db4b4b",
+          hlgroup = {
+            'Error',
+            'background',
+          },
+        },
       })
     end
   },
   {
-    "jackMort/ChatGPT.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("chatgpt").setup({
-        keymaps = {
-          close = { "<C-c>" },
-          submit = "<A-s>",
-          yank_last = "<C-y>",
-          yank_last_code = "<C-k>",
-          scroll_up = "<C-u>",
-          scroll_down = "<C-d>",
-          toggle_settings = "<C-o>",
-          new_session = "<C-n>",
-          cycle_windows = "<Tab>",
-          -- in the Sessions pane
-          select_session = "<Space>",
-          rename_session = "r",
-          delete_session = "d",
-        },
-      })
-    end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim"
-    }
+    'AckslD/muren.nvim',
+    config = true,
   },
   {
-    "martinsione/darkplus.nvim"
+    'marko-cerovac/material.nvim'
   },
 }
 
 -- 创建自定义命令
-vim.api.nvim_create_user_command("Cppath", function()
-  local path = vim.fn.expand("%:p")
-  vim.fn.setreg("+", path)
-  vim.notify('Copied "' .. path .. '" to the clipboard!')
+v.api.nvim_create_user_command("Cppath", function()
+  local path = v.fn.expand("%:p")
+  v.fn.setreg("+", path)
+  v.notify('Copied "' .. path .. '" to the clipboard!')
 end, {})
 
-vim.keymap.set(
+v.keymap.set(
   "n",
   "gpd",
   "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",
   { noremap = true }
 )
-vim.keymap.set(
+v.keymap.set(
   "n",
   "gpt",
   "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
   { noremap = true }
 )
-vim.keymap.set(
+v.keymap.set(
   "n",
   "gpi",
   "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
   { noremap = true }
 )
-vim.keymap.set("n",
+v.keymap.set("n",
   "gP",
   "<cmd>lua require('goto-preview').close_all_win()<CR>",
   { noremap = true }
 )
-vim.keymap.set(
+v.keymap.set(
   "n",
   "gpr",
   "<cmd>lua require('goto-preview').goto_preview_references()<CR>",
