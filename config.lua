@@ -132,10 +132,22 @@ builtin.cmp.cmdline.enable = true
 builtin.terminal.shell = "pwsh.exe -NoLogo"
 builtin.nvimtree.setup.diagnostics.enable = true
 builtin.nvimtree.setup.filters.custom = nil
-builtin.nvimtree.setup.git.timeout = 500
+builtin.nvimtree.setup.git.enable = false
 builtin.nvimtree.setup.update_cwd = nil
 builtin.nvimtree.setup.update_focused_file.update_cwd = nil
-builtin.nvimtree.setup.view.side = "left"
+-- builtin.nvimtree.setup.view.side = "left"
+builtin.nvimtree.setup.view.float = {
+  enable = true,
+  quit_on_focus_loss = true,
+  open_win_config = {
+    relative = "editor",
+    border = "rounded",
+    width = 80,
+    height = 30,
+    row = 1,
+    col = 1,
+  },
+}
 builtin.nvimtree.setup.renderer.highlight_git = nil
 builtin.nvimtree.setup.renderer.icons.show.git = nil
 
@@ -182,7 +194,7 @@ lvim.plugins = {
     'rmagatti/goto-preview',
     config = function()
       require('goto-preview').setup {
-        width = 200,
+        width = 120,
         height = 20,
       }
     end
@@ -224,32 +236,32 @@ lvim.plugins = {
       }
     end,
   },
-  {
-    'Bekaboo/deadcolumn.nvim',
-    event = "VeryLazy",
-    config = function()
-      require('deadcolumn').setup({
-        modes = { 'i', 'ic', 'ix', 'R', 'Rc', 'Rx', 'Rv', 'Rvc', 'Rvx', 'n' },
-        blending = {
-          threshold = 0.75,
-          colorcode = "#9ece6a",
-          hlgroup = {
-            'Normal',
-            'background',
-          },
-        },
-        warning = {
-          alpha = 1,
-          offset = 0,
-          colorcode = "#db4b4b",
-          hlgroup = {
-            'Error',
-            'background',
-          },
-        },
-      })
-    end
-  },
+  -- {
+  --   'Bekaboo/deadcolumn.nvim',
+  --   event = "VeryLazy",
+  --   config = function()
+  --     require('deadcolumn').setup({
+  --       modes = { 'i', 'ic', 'ix', 'R', 'Rc', 'Rx', 'Rv', 'Rvc', 'Rvx', 'n' },
+  --       blending = {
+  --         threshold = 0.75,
+  --         colorcode = "#9ece6a",
+  --         hlgroup = {
+  --           'Normal',
+  --           'background',
+  --         },
+  --       },
+  --       warning = {
+  --         alpha = 1,
+  --         offset = 0,
+  --         colorcode = "#db4b4b",
+  --         hlgroup = {
+  --           'Error',
+  --           'background',
+  --         },
+  --       },
+  --     })
+  --   end
+  -- },
   {
     'AckslD/muren.nvim',
     config = true,
