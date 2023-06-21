@@ -50,7 +50,7 @@ v.cmd('source ~/.config/nvim/neovide.vim')
 -- 默认 shell 配置
 -- v.opt.background = 'dark'
 -- darker lighter oceanic palenight (deep ocean)
-vim.g.material_style = 'palenight'
+vim.g.material_style = 'darker'
 v.opt.shell = "pwsh.exe -NoLogo"
 v.opt.timeoutlen = 1
 v.opt.relativenumber = false
@@ -73,6 +73,16 @@ keymap["S"]["c"] = { "viw:lua require('spectre').open_file_search()<cr>", "Curre
 keymap["S"]["t"] = { "<cmd>MurenToggle<CR>", "Muren Toggle" }
 keymap["S"]["o"] = { "<cmd>MurenOpen<CR>", "Muren Open" }
 keymap["S"]["r"] = { "<cmd>MurenFresh<CR>", "Muren Refresh" }
+
+keymap["t"] = {
+  name = "Diagnostics",
+  t = { "<cmd>TroubleToggle<cr>", "trouble" },
+  w = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "workspace" },
+  d = { "<cmd>TroubleToggle document_diagnostics<cr>", "document" },
+  q = { "<cmd>TroubleToggle quickfix<cr>", "quickfix" },
+  l = { "<cmd>TroubleToggle loclist<cr>", "loclist" },
+  r = { "<cmd>TroubleToggle lsp_references<cr>", "references" },
+}
 
 -- 复制当前文件完整路径
 keymap["y"] = { name = "Copy File Path" }
@@ -129,7 +139,6 @@ nm["zlg"] = "^v$hcconsole.log()<esc>P"
 nm["cp"] = "yap<S-}>p"
 nm["cn"] = "*``cgn"
 nm["cN"] = "*``cgN"
-nm["cg"] = "<cmd>ChatGPTEditWithInstructions<CR>"
 nm["<leader>a"] = "ggVG"
 nm["<leader>="] = "m`=ip``"
 nm["<leader>gt"] = ":GitBlameToggle<CR>"
@@ -241,43 +250,43 @@ lvim.plugins = {
       }
     end
   },
-  {
-    "zbirenbaum/copilot.lua",
-    event = "VeryLazy",
-    config = function()
-      v.defer_fn(function()
-        require("copilot").setup {
-          plugin_manager_path = get_runtime_dir() .. "/site/pack/lazy",
-          panel = {
-            auto_refresh = true,
-          },
-          suggestion = {
-            auto_trigger = true,
-            keymap = {
-              accept = "<A-f>",
-              accept_word = false,
-              accept_line = false,
-              next = "<Tab>",
-              prev = "<S-Tab>",
-              dismiss = "<A-c>",
-            },
-          }
-        }
-      end, 100)
-    end,
-  },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   event = "VeryLazy",
+  --   config = function()
+  --     v.defer_fn(function()
+  --       require("copilot").setup {
+  --         plugin_manager_path = get_runtime_dir() .. "/site/pack/lazy",
+  --         panel = {
+  --           auto_refresh = true,
+  --         },
+  --         suggestion = {
+  --           auto_trigger = true,
+  --           keymap = {
+  --             accept = "<A-f>",
+  --             accept_word = false,
+  --             accept_line = false,
+  --             next = "<Tab>",
+  --             prev = "<S-Tab>",
+  --             dismiss = "<A-c>",
+  --           },
+  --         }
+  --       }
+  --     end, 100)
+  --   end,
+  -- },
 
-  {
-    "zbirenbaum/copilot-cmp",
-    after = { "copilot.lua", "nvim-cmp" },
-    config = function()
-      require("copilot_cmp").setup {
-        formatters = {
-          insert_text = require("copilot_cmp.format").remove_existing,
-        },
-      }
-    end,
-  },
+  -- {
+  --   "zbirenbaum/copilot-cmp",
+  --   after = { "copilot.lua", "nvim-cmp" },
+  --   config = function()
+  --     require("copilot_cmp").setup {
+  --       formatters = {
+  --         insert_text = require("copilot_cmp.format").remove_existing,
+  --       },
+  --     }
+  --   end,
+  -- },
   -- {
   --   'Bekaboo/deadcolumn.nvim',
   --   event = "VeryLazy",
@@ -312,7 +321,41 @@ lvim.plugins = {
   {
     'marko-cerovac/material.nvim'
   },
+  {
+    "jackMort/ChatGPT.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("chatgpt").setup()
+    end,
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
+  },
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "BufRead",
+    config = function() require "lsp_signature".on_attach() end,
+  },
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "TroubleToggle",
+  }
 }
+
+table.insert(lvim.plugins, {
+  "zbirenbaum/copilot-cmp",
+  event = "InsertEnter",
+  dependencies = { "zbirenbaum/copilot.lua" },
+  config = function()
+    vim.defer_fn(function()
+      require("copilot").setup()     -- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
+      require("copilot_cmp").setup() -- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
+    end, 100)
+  end,
+})
 
 -- 创建自定义命令
 v.api.nvim_create_user_command("Cppath", function()
@@ -350,5 +393,5 @@ v.keymap.set(
   "<cmd>lua require('goto-preview').goto_preview_references()<CR>",
   { noremap = true }
 )
-lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
+lvim.builtin.cmp.formatting.source_names["copilot"] = "🤖"
 table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
