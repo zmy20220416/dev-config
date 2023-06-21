@@ -45,36 +45,12 @@ local banner2 = {
   [[ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo]],
 }
 
-local banner3 = {
-  [[  ______________________________________________________________________ ]],
-  [[ |.============[_F_E_D_E_R_A_L___R_E_S_E_R_V_E___N_O_T_E_]=============.|]],
-  [[ ||%&%&%&%_    _        _ _ _   _ _  _ _ _     _       _    _  %&%&%&%&||]],
-  [[ ||%&.-.&/||_||_ | ||\||||_| \ (_ ||\||_(_  /\|_ |\|V||_|)|/ |\ %&.-.&&||]],
-  [[ ||&// |\ || ||_ \_/| ||||_|_/ ,_)|||||_,_) \/|  ||| ||_|\|\_|| &// |\%||]],
-  [[ ||| | | |%               ,-----,-'____'-,-----,               %| | | |||]],
-  [[ ||| | | |&% """"""""""  [    .-;"`___ `";-.    ]             &%| | | |||]],
-  [[ ||&\===//                `).'' .'`_.- `. '.'.(`  A 76355942 J  \\===/&||]],
-  [[ ||&%'-'%/1                // .' /`     \    \\                  \%'-'%||]],
-  [[ ||%&%&%/`   d8888b       // /   \  _  _;,    \\      .-"""-.  1 `&%&%%||]],
-  [[ ||&%&%&    8P |) Yb     ;; (     > a  a| \    ;;    //A`Y A\\    &%&%&||]],
-  [[ ||&%&%|    8b |) d8     || (    ,\   \ |  )   ||    ||.-'-.||    |%&%&||]],
-  [[ ||%&%&|     Y8888P      ||  '--'/`  -- /-'    ||    \\_/~\_//    |&%&%||]],
-  [[ ||%&%&|                 ||     |\`-.__/       ||     '-...-'     |&%&%||]],
-  [[ ||%%%%|                 ||    /` |._ .|-.     ||                 |%&%&||]],
-  [[ ||%&%&|  A 76355942 J  /;\ _.'   \  } \  '-.  /;\                |%&%&||]],
-  [[ ||&%.-;               (,  '.      \  } `\   \'  ,)   ,.,.,.,.,   ;-.%&||]],
-  [[ ||%( | ) 1  """""""   _( \  ;...---------.;.; / )_ ```""""""" 1 ( | )%||]],
-  [[ ||&%'-'==================\`------------------`/=================='-'%&||]],
-  [[ ||%&JGS&%&%&%&%%&%&&&%&%%&)O N E  D O L L A R(%&%&%&%&%&%&%%&%&&&%&%%&||]],
-  [[ '""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""`]],
-}
-
 -- 添加 neovide 配置
 v.cmd('source ~/.config/nvim/neovide.vim')
 -- 默认 shell 配置
 -- v.opt.background = 'dark'
 -- darker lighter oceanic palenight (deep ocean)
-vim.g.material_style = 'darker'
+vim.g.material_style = 'palenight'
 v.opt.shell = "pwsh.exe -NoLogo"
 v.opt.timeoutlen = 1
 v.opt.relativenumber = false
@@ -190,7 +166,7 @@ im["<C-d>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:
 builtin.alpha.active = true
 builtin.dap.active = false
 builtin.alpha.mode = "dashboard"
-builtin.alpha.dashboard.section.header.val = banner1
+builtin.alpha.dashboard.section.header.val = banner2
 builtin.terminal.active = true
 builtin.cmp.cmdline.enable = true
 builtin.terminal.shell = "pwsh.exe -NoLogo"
@@ -207,7 +183,7 @@ builtin.nvimtree.setup.view.float = {
     relative = "editor",
     border = "rounded",
     width = 80,
-    height = 30,
+    height = 35,
     row = 1,
     col = 1,
   },
@@ -224,7 +200,7 @@ builtin.treesitter.highlight.enable = true        -- 开启高亮模式
 lvim.plugins = {
   {
     "windwp/nvim-spectre",
-    event = "BufRead",
+    event = "VeryLazy",
     config = function()
       require("spectre").setup()
     end,
@@ -250,22 +226,24 @@ lvim.plugins = {
   {
     "iamcco/markdown-preview.nvim",
     ft = "markdown",
+    event = "VeryLazy",
     config = function()
       v.g.mkdp_auto_start = 1
     end,
   },
   {
     'rmagatti/goto-preview',
+    event = "VeryLazy",
     config = function()
       require('goto-preview').setup {
-        width = 200,
+        width = 120,
         height = 20,
       }
     end
   },
   {
     "zbirenbaum/copilot.lua",
-    -- event = "InsertEnter",
+    event = "VeryLazy",
     config = function()
       v.defer_fn(function()
         require("copilot").setup {
@@ -329,6 +307,7 @@ lvim.plugins = {
   {
     'AckslD/muren.nvim',
     config = true,
+    event = "VeryLazy",
   },
   {
     'marko-cerovac/material.nvim'
