@@ -265,7 +265,7 @@ lvim.plugins = {
   --           keymap = {
   --             accept = "<A-f>",
   --             accept_word = false,
-  --             accept_line = false,
+  --             accept_line = treue,
   --             next = "<Tab>",
   --             prev = "<S-Tab>",
   --             dismiss = "<A-c>",
@@ -351,7 +351,7 @@ table.insert(lvim.plugins, {
   dependencies = { "zbirenbaum/copilot.lua" },
   config = function()
     vim.defer_fn(function()
-      require("copilot").setup()     -- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
+      require("copilot").setup()                             -- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
       require("copilot_cmp").setup() -- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
     end, 100)
   end,
