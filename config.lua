@@ -107,7 +107,7 @@ v.g.clipboard = {
 }
 
 -- 通用配置
-lvim.log.level = "warn"
+lvim.log.level = "info"
 lvim.format_on_save.enabled = false
 lvim.transparent_window = true
 lvim.colorscheme = "material"
@@ -116,6 +116,8 @@ lvim.leader = "space"
 -- 添加自己的快捷键
 nm["<C-s>"] = ":w<cr>"
 nm[","] = "$a,<esc>"
+nm["j"] = "jzz"
+nm["k"] = "kzz"
 nm["<leader>1"] = ":BufferLineGoToBuffer 1<CR>"
 nm["<leader>2"] = ":BufferLineGoToBuffer 2<CR>"
 nm["<leader>3"] = ":BufferLineGoToBuffer 3<CR>"
@@ -124,7 +126,8 @@ nm["<leader>5"] = ":BufferLineGoToBuffer 5<CR>"
 nm["<leader>6"] = ":BufferLineGoToBuffer 6<CR>"
 nm["<leader>7"] = ":BufferLineGoToBuffer 7<CR>"
 nm["<leader>8"] = ":BufferLineGoToBuffer 8<CR>"
-nm["<leader>9"] = ":BufferLineGoToBuffer 9<CR>"
+nm["<leader>9"] = ":ChatGPTActAs<CR>"
+nm["<leader>0"] = ":ChatGPT<CR>"
 nm["}"] = "$a}<esc>"
 nm["  "] = "/"
 nm["n"] = "nzzzv"
@@ -144,10 +147,8 @@ nm["<leader>="] = "m`=ip``"
 nm["<leader>gt"] = ":GitBlameToggle<CR>"
 nm["Q"] = "@q"
 nm["vv"] = "^v$h"
--- nm[";"] = "m`A;<esc>``"
--- nm[","] = "m`A,<esc>``"
-nm[";"] = "m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:nohl<CR><esc>``"
-nm[","] = "m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``"
+nm["__"] = "m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:nohl<CR><esc>``"
+nm["--"] = "m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``"
 nm["'"] = "ciw''<esc>P"
 nm["`"] = "ciw``<esc>P"
 -- nm["ms "] = "ciw  <esc>P"
@@ -175,8 +176,28 @@ im["<C-d>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:
 builtin.alpha.active = true
 builtin.dap.active = false
 builtin.alpha.mode = "dashboard"
-builtin.alpha.dashboard.section.header.val = banner2
+-- builtin.which_key.setup.window.border = 'none'
+builtin.alpha.dashboard.section.header.val = {
+  "                                           ",
+  "                                           ",
+  "                                           ",
+  "                                           ",
+  "                                           ",
+  "                                           ",
+  "                                           ",
+  "                                           ",
+  "                                           ",
+}
+builtin.alpha.dashboard.section.footer.val = {}
 builtin.terminal.active = true
+-- builtin.terminal.float_opts.border = "none"
+builtin.telescope.defaults.layout_config.width = 0.8
+builtin.telescope.defaults.layout_config.height = 0.8
+-- builtin.mason.ui.border = "none"
+builtin.telescope.defaults.file_ignore_patterns = {
+  "node_modules",
+  "dist"
+}
 builtin.cmp.cmdline.enable = true
 builtin.terminal.shell = "pwsh.exe -NoLogo"
 builtin.nvimtree.setup.diagnostics.enable = true
@@ -184,14 +205,13 @@ builtin.nvimtree.setup.filters.custom = nil
 builtin.nvimtree.setup.git.enable = false
 builtin.nvimtree.setup.update_cwd = nil
 builtin.nvimtree.setup.update_focused_file.update_cwd = nil
--- builtin.nvimtree.setup.view.side = "left"
 builtin.nvimtree.setup.view.float = {
   enable = true,
   quit_on_focus_loss = true,
   open_win_config = {
     relative = "editor",
-    border = "rounded",
-    width = 80,
+    border = "none",
+    width = 60,
     height = 35,
     row = 1,
     col = 1,
@@ -214,19 +234,19 @@ lvim.plugins = {
       require("spectre").setup()
     end,
   },
-  {
-    "phaazon/hop.nvim",
-    event = "BufRead",
-    config = function()
-      require("hop").setup()
-      v.api.nvim_set_keymap("n", "S", ":HopChar2<cr>", { silent = true })
-      v.api.nvim_set_keymap("n", "s", ":HopWord<cr>", { silent = true })
-    end,
-  },
+  -- {
+  --   "phaazon/hop.nvim",
+  --   event = "BufRead",
+  --   config = function()
+  --     require("hop").setup()
+  --     v.api.nvim_set_keymap("n", "S", ":HopChar2<cr>", { silent = true })
+  --     v.api.nvim_set_keymap("n", "s", ":HopWord<cr>", { silent = true })
+  --   end,
+  -- },
   {
     "tzachar/cmp-tabnine",
     dependencies = "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    event = "InsertEnter"
   },
   {
     'f-person/git-blame.nvim',
@@ -237,7 +257,12 @@ lvim.plugins = {
     ft = "markdown",
     event = "VeryLazy",
     config = function()
+      -- 添加 markdown-preview.nvim 配置
       v.g.mkdp_auto_start = 1
+      v.g.mkdp_open_to_the_world = 1
+      v.g.mkdp_echo_preview_url = 1
+      v.g.mkdp_refresh_slow = 1
+      v.g.mkdp_command_for_global = 1
     end,
   },
   {
@@ -249,6 +274,54 @@ lvim.plugins = {
         height = 20,
       }
     end
+  },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    ---@type Flash.Config
+    opts = {},
+    keys = {
+      {
+        "s",
+        mode = { "n", "x", "o" },
+        function()
+          require("flash").jump()
+        end,
+        desc = "Flash",
+      },
+      {
+        "S",
+        mode = { "n", "o", "x" },
+        function()
+          require("flash").treesitter()
+        end,
+        desc = "Flash Treesitter",
+      },
+      {
+        "r",
+        mode = "o",
+        function()
+          require("flash").remote()
+        end,
+        desc = "Remote Flash",
+      },
+      {
+        "R",
+        mode = { "o", "x" },
+        function()
+          require("flash").treesitter_search()
+        end,
+        desc = "Flash Treesitter Search",
+      },
+      {
+        "<c-s>",
+        mode = { "c" },
+        function()
+          require("flash").toggle()
+        end,
+        desc = "Toggle Flash Search",
+      },
+    },
   },
   -- {
   --   "zbirenbaum/copilot.lua",
@@ -325,7 +398,42 @@ lvim.plugins = {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
     config = function()
-      require("chatgpt").setup()
+      require("chatgpt").setup({
+        chat = {
+          welcome_message = '欢迎你的到来，有什么可以帮助你的吗？',
+          loading_text = "正在加载中，请稍后...",
+          question_sign = "🤖",
+          answer_sign = "👽",
+          max_line_length = 120,
+        },
+        popup_window = {
+          border = {
+            highlight = "none",
+            style = "single",
+            text = {
+              top = "🎉",
+            },
+          },
+          win_options = {
+            wrap = true,
+            linebreak = true,
+            foldcolumn = "1",
+            winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+          },
+          buf_options = {
+            filetype = "markdown",
+          },
+        },
+        openai_params = {
+          model = "gpt-3.5-turbo",
+          frequency_penalty = 0,
+          presence_penalty = 0,
+          max_tokens = 1000,
+          temperature = 0,
+          top_p = 1,
+          n = 1,
+        },
+      })
     end,
     dependencies = {
       "MunifTanjim/nui.nvim",
@@ -333,16 +441,23 @@ lvim.plugins = {
       "nvim-telescope/telescope.nvim"
     }
   },
-  {
-    "ray-x/lsp_signature.nvim",
-    event = "BufRead",
-    config = function() require "lsp_signature".on_attach() end,
-  },
+  -- {
+  --   "ray-x/lsp_signature.nvim",
+  --   event = "BufRead",
+  --   config = function() require "lsp_signature".on_attach() end,
+  -- },
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "TroubleToggle",
-  }
+  },
+  {
+    'adelarsq/image_preview.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require("image_preview").setup()
+    end
+  },
 }
 
 table.insert(lvim.plugins, {
@@ -351,7 +466,21 @@ table.insert(lvim.plugins, {
   dependencies = { "zbirenbaum/copilot.lua" },
   config = function()
     vim.defer_fn(function()
-      require("copilot").setup()                             -- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
+      require("copilot").setup({
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 75,
+          keymap = {
+            accept = "<A-f>",
+            accept_word = false,
+            accept_line = false,
+            next = "<Tab>",
+            prev = "<S-Tab>",
+            dismiss = "<A-c>",
+          },
+        },
+      })                             -- https://github.com/zbirenbaum/copilot.lua/blob/master/README.md#setup-and-configuration
       require("copilot_cmp").setup() -- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
     end, 100)
   end,
