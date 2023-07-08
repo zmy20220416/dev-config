@@ -5,45 +5,8 @@ local nm = lvim.keys.normal_mode
 local vm = lvim.keys.visual_mode
 local im = lvim.keys.insert_mode
 local v = vim
-
-local banner1 = {
-  [[                                              ,           ^'^  _     ]],
-  [[                                              )               (_) ^'^]],
-  [[         _/\_                    .---------. ((        ^'^           ]],
-  [[         (('>                    )`'`'`'`'`( ||                 ^'^  ]],
-  [[    _    /^|                    /`'`'`'`'`'`\||           ^'^        ]],
-  [[    =>--/__|m---               /`'`'`'`'`'`'`\|                      ]],
-  [[         ^^           ,,,,,,, /`'`'`'`'`'`'`'`\      ,               ]],
-  [[                     .-------.`|`````````````|`  .   )               ]],
-  [[                    / .^. .^. \|  ,^^, ,^^,  |  / \ ((               ]],
-  [[                   /  |_| |_|  \  |__| |__|  | /,-,\||               ]],
-  [[        _         /_____________\ |")| |  |  |/ |_| \|               ]],
-  [[       (")         |  __   __  |  '==' '=='  /_______\     _         ]],
-  [[      (' ')        | /  \ /  \ |   _______   |,^, ,^,|    (")        ]],
-  [[       \  \        | |--| |--| |  ((--.--))  ||_| |_||   (' ')       ]],
-  [[     _  ^^^ _      | |__| |("| |  ||  |  ||  |,-, ,-,|   /  /        ]],
-  [[   ,' ',  ,' ',    |           |  ||  |  ||  ||_| |_||   ^^^         ]],
-  [[.,,|RIP|,.|RIP|,.,,'==========='==''=='==''=='=======',,....,,,,.,ldb]],
-  [[]],
-}
-
-local banner2 = {
-  [[                                   /\                                ]],
-  [[                              /\  //\\                               ]],
-  [[                       /\    //\\///\\\        /\                    ]],
-  [[                      //\\  ///\////\\\\  /\  //\\                   ]],
-  [[         /\          /  ^ \/^ ^/^  ^  ^ \/^ \/  ^ \                  ]],
-  [[        / ^\    /\  / ^   /  ^/ ^ ^ ^   ^\ ^/  ^^  \                 ]],
-  [[       /^   \  / ^\/ ^ ^   ^ / ^  ^    ^  \/ ^   ^  \       *        ]],
-  [[      /  ^ ^ \/^  ^\ ^ ^ ^   ^  ^   ^   ____  ^   ^  \     /|\       ]],
-  [[     / ^ ^  ^ \ ^  _\___________________|  |_____^ ^  \   /||o\      ]],
-  [[    / ^^  ^ ^ ^\  /______________________________\ ^ ^ \ /|o|||\     ]],
-  [[   /  ^  ^^ ^ ^  /________________________________\  ^  /|||||o|\    ]],
-  [[  /^ ^  ^ ^^  ^    ||___|___||||||||||||___|__|||      /||o||||||\   ]],
-  [[ / ^   ^   ^    ^  ||___|___||||||||||||___|__|||          | |       ]],
-  [[/ ^ ^ ^  ^  ^  ^   ||||||||||||||||||||||||||||||oooooooooo| |ooooooo]],
-  [[ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo]],
-}
+local HEIGHT_RATIO = 0.8 -- You can change this
+local WIDTH_RATIO = 0.5  -- You can change this too
 
 -- 添加 neovide 配置
 v.cmd('source ~/.config/nvim/neovide.vim')
@@ -54,7 +17,7 @@ vim.g.material_style = 'darker'
 v.opt.shell = "pwsh.exe -NoLogo"
 v.opt.timeoutlen = 1
 v.opt.relativenumber = false
-v.opt.colorcolumn = "80"
+v.opt.colorcolumn = "120"
 v.opt.shellcmdflag =
 "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
 v.cmd [[
@@ -117,7 +80,11 @@ lvim.leader = "space"
 nm["<C-s>"] = ":w<cr>"
 nm[","] = "$a,<esc>"
 nm["j"] = "jzz"
+nm["o"] = "o<ESC>zzi"
+nm["O"] = "O<ESC>zzi"
 nm["k"] = "kzz"
+nm["<Tab>"] = ":bnext<CR>"
+nm["<S-Tab>"] = ":bprev<CR>"
 nm["<leader>1"] = ":BufferLineGoToBuffer 1<CR>"
 nm["<leader>2"] = ":BufferLineGoToBuffer 2<CR>"
 nm["<leader>3"] = ":BufferLineGoToBuffer 3<CR>"
@@ -147,8 +114,8 @@ nm["<leader>="] = "m`=ip``"
 nm["<leader>gt"] = ":GitBlameToggle<CR>"
 nm["Q"] = "@q"
 nm["vv"] = "^v$h"
-nm["__"] = "m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:nohl<CR><esc>``"
-nm["--"] = "m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``"
+nm["_"] = "m`:s/\\v(.)$/\\=submatch(1)==';' ? '' : submatch(1).';'<CR>:nohl<CR><esc>``"
+nm["-"] = "m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:nohl<CR><esc>``"
 nm["'"] = "ciw''<esc>P"
 nm["`"] = "ciw``<esc>P"
 -- nm["ms "] = "ciw  <esc>P"
@@ -176,7 +143,7 @@ im["<C-d>"] = "<esc>m`:s/\\v(.)$/\\=submatch(1)==',' ? '' : submatch(1).','<CR>:
 builtin.alpha.active = true
 builtin.dap.active = false
 builtin.alpha.mode = "dashboard"
--- builtin.which_key.setup.window.border = 'none'
+builtin.which_key.setup.window.border = 'none'
 builtin.alpha.dashboard.section.header.val = {
   "                                           ",
   "                                           ",
@@ -190,13 +157,58 @@ builtin.alpha.dashboard.section.header.val = {
 }
 builtin.alpha.dashboard.section.footer.val = {}
 builtin.terminal.active = true
--- builtin.terminal.float_opts.border = "none"
+builtin.terminal.float_opts.border = "none"
 builtin.telescope.defaults.layout_config.width = 0.8
 builtin.telescope.defaults.layout_config.height = 0.8
--- builtin.mason.ui.border = "none"
+builtin.mason.ui.border = "none"
+builtin.gitsigns.opts.preview_config.border = "none"
+builtin.lir.float.win_opts = function()
+  return {
+    border = "none",
+  }
+end
+builtin.dap.ui.config.floating.border = "none"
 builtin.telescope.defaults.file_ignore_patterns = {
+  ".vscode",
+  ".github",
+  ".git",
   "node_modules",
-  "dist"
+  "*.DS_Store",
+  ".idea",
+  "dist",
+  "package-lock.json",
+  "yarn.lock",
+  "pnpm-lock.yaml",
+  "pnpm-workspace.yaml",
+  "local",
+  "**/*.png",
+  "**/*.jpg",
+  "**/*.jpeg",
+  "**/*.gif",
+  "**/*.ico",
+  "**/*.svg",
+  "**/*.otf",
+  "**/*.ttf",
+  "**/*.woff",
+  "**/*.woff2",
+  "**/*.eot",
+  "**/*.zip",
+  "**/*.tar.gz",
+  "**/*.tar.bz2",
+  "**/*.rar",
+  "**/*.7z",
+  "lib",
+  "logs",
+  "tmp",
+  "npm-debug.log*",
+  "yarn-debug.log*",
+  "yarn-error.log*",
+  "lerna-debug.log*",
+  "coverage",
+  "typings/",
+  "docs/input",
+  "docs/markdown",
+  "doc",
 }
 builtin.cmp.cmdline.enable = true
 builtin.terminal.shell = "pwsh.exe -NoLogo"
@@ -208,14 +220,25 @@ builtin.nvimtree.setup.update_focused_file.update_cwd = nil
 builtin.nvimtree.setup.view.float = {
   enable = true,
   quit_on_focus_loss = true,
-  open_win_config = {
-    relative = "editor",
-    border = "none",
-    width = 60,
-    height = 35,
-    row = 1,
-    col = 1,
-  },
+  open_win_config = function()
+    local screen_w = vim.opt.columns:get()
+    local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+    local window_w = screen_w * WIDTH_RATIO
+    local window_h = screen_h * HEIGHT_RATIO
+    local window_w_int = math.floor(window_w)
+    local window_h_int = math.floor(window_h)
+    local center_x = (screen_w - window_w) / 2
+    local center_y = ((vim.opt.lines:get() - window_h) / 2)
+        - vim.opt.cmdheight:get()
+    return {
+      border = "none",
+      relative = "editor",
+      row = center_y,
+      col = center_x,
+      width = window_w_int,
+      height = window_h_int,
+    }
+  end,
 }
 builtin.nvimtree.setup.renderer.highlight_git = nil
 builtin.nvimtree.setup.renderer.icons.show.git = nil
@@ -450,13 +473,6 @@ lvim.plugins = {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     cmd = "TroubleToggle",
-  },
-  {
-    'adelarsq/image_preview.nvim',
-    event = 'VeryLazy',
-    config = function()
-      require("image_preview").setup()
-    end
   },
 }
 
